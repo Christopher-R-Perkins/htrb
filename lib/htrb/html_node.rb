@@ -30,7 +30,7 @@ module Htrb
     end
 
     def t(text)
-      child text
+      child text.to_s
     end
 
     def to_s
@@ -54,7 +54,7 @@ module Htrb
     private
 
     def render(&contents)
-      instance_eval &contents if block_given? && !self_closing?
+      remit &contents if block_given? && !self_closing?
     end
 
     def method_missing(symbol, *args)
@@ -74,6 +74,16 @@ module Htrb
 
     def props
       @attributes
+    end
+
+    def remit(&contents)
+      if self_closing?
+        raise SelfClosingTagError.new
+      end
+
+      raise ArgumentError.new 'Must pass block' unless block_given?
+
+      instance_eval &contents
     end
 
     protected
