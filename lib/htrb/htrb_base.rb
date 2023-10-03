@@ -4,4 +4,8 @@ module Htrb
   def self.fragment(&block)
     Htrb::HtmlNode.new &block
   end
+
+  def self.document
+    Htrb::HtmlDocument.new
+  end
 end

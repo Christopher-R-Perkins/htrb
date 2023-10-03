@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
     'lib/htrb/version.rb',
     'lib/htrb/html_elements.rb',
     'lib/htrb/htrb_base',
+    'lib/htrb/html_document.rb',
   ]
   s.required_ruby_version = Gem::Requirement.new(">= 3.0")
 end

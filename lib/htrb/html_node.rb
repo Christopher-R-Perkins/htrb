@@ -12,10 +12,35 @@ module Htrb
       raise TagExistsError.new sym if method_defined? sym
 
       self.define_method sym do |**attributes, &contents|
-        @children.push subclass.new(**attributes, &contents)
-
-        @children.last
+        child subclass.new(**attributes, &contents)
       end
+    end
+
+    def contents(&contents)
+      if block_given?
+        @children.clear
+        render &contents
+      end
+
+      @children.dup
+    end
+
+    def child(child)
+      unless child.is_a?(String) || child.is_a?(Htrb::HtmlNode)
+        raise ArgumentError.new 'A child must be a string or HtmlNode'
+      end
+
+      if self_closing?
+        raise SelfClosingTagError.new
+      end
+
+      @children.push child
+
+      child
+    end
+
+    def t(text)
+      child text
     end
 
     def to_s
@@ -32,13 +57,8 @@ module Htrb
       html
     end
 
-    def t(text)
-      unless text.class == String
-        raise ArgumentError.new 'Text nodes can only be passed strings'
-      end
-
-      @children.push text
-      text
+    def to_pretty
+      self.to_pretty_arr.join("\n")
     end
 
     private
@@ -61,11 +81,42 @@ module Htrb
 
       attr_str
     end
+
+    def props
+      @attributes
+    end
+
+    protected
+
+    TAB = '  '
+
+    def to_pretty_arr(depth=0)
+      depth -= 1 unless tag
+
+      arr = []
+      arr.push "#{TAB * depth}<#{tag}#{attributes}>" if tag
+      @children.each do |child|
+        if child.is_a? String
+          arr.push "#{TAB * (depth + 1)}#{child}"
+        else
+          arr.push child.to_pretty_arr(depth + 1)
+        end
+      end
+
+      arr.push "#{TAB * depth}</#{tag}>" if tag
+      arr
+    end
   end
 
   class TagExistsError < StandardError
     def initialize(symbol)
-      super("htrb component `#{symbol}` already exists")
+      super "htrb component `#{symbol}` already exists"
+    end
+  end
+
+  class SelfClosingTagError < StandardError
+    def initialize
+      super "Can't add children to self closing tag"
     end
   end
 end
