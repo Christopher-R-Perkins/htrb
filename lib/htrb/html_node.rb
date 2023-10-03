@@ -7,7 +7,12 @@ module Htrb
     end
 
     def self.inherited(subclass)
-      sym = subclass.name.downcase.split('::').last.to_sym
+      if subclass.name
+        sym = subclass.name.downcase.split('::').last.to_sym
+      else
+        sym = subclass.tag.to_sym
+      end
+
       raise TagExistsError.new sym if method_defined? sym
 
       self.define_method sym do |**attributes, &contents|
@@ -24,10 +29,10 @@ module Htrb
     def to_s
       html = ''
 
-      html += "<#{tag} #{attributes}>" if tag
+      html += "<#{tag}#{attributes}>" if tag
 
       unless self_closing?
-        children.each { |child| html += child.to_s }
+        @children.each { |child| html += child.to_s }
 
         html += "</#{tag}>" if tag
       end
