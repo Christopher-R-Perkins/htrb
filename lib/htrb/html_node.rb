@@ -7,11 +7,7 @@ module Htrb
     end
 
     def self.inherited(subclass)
-      if subclass.name
-        sym = subclass.name.downcase.split('::').last.to_sym
-      else
-        sym = subclass.tag.to_sym
-      end
+      sym = subclass.name.downcase.split('::').last.to_sym
 
       raise TagExistsError.new sym if method_defined? sym
 
@@ -20,10 +16,6 @@ module Htrb
 
         @children.last
       end
-    end
-
-    def render(&contents)
-      instance_eval &contents if block_given? && !self_closing?
     end
 
     def to_s
@@ -50,6 +42,10 @@ module Htrb
     end
 
     private
+
+    def render(&contents)
+      instance_eval &contents if block_given? && !self_closing?
+    end
 
     def method_missing(symbol, *args)
       return false if [:self_closing?, :tag].include? symbol
