@@ -6,16 +6,6 @@ module Htrb
       render &contents
     end
 
-    def self.inherited(subclass)
-      sym = subclass.name.downcase.split('::').last.to_sym
-
-      raise TagExistsError.new sym if method_defined? sym
-
-      self.define_method sym do |**attributes, &contents|
-        child subclass.new(**attributes, &contents)
-      end
-    end
-
     def contents(&contents)
       if block_given?
         @children.clear
@@ -26,7 +16,7 @@ module Htrb
     end
 
     def child(child)
-      unless child.is_a?(String) || child.is_a?(Htrb::HtmlNode)
+      unless child.is_a?(String) || child.is_a?(HtmlNode)
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
 

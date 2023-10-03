@@ -1,13 +1,11 @@
 module Htrb
-  require_relative './html_node'
-
   class HtmlDocument
     def initialize
-      @dom = Htrb::HtmlNode.new
+      @dom = HtmlNode.new
       @title = ''
-      @head = Htrb::Elements::Head.new
-      @body = Htrb::Elements::Body.new
-      html = Htrb::Elements::Html.new
+      @head = Elements::Head.new
+      @body = Elements::Body.new
+      html = Elements::Html.new
 
       @dom.child '<!DOCTYPE html>'
       @dom.child html
