@@ -6,16 +6,6 @@ module Htrb
       render &contents
     end
 
-    def self.inherited(subclass)
-      sym = subclass.name.downcase.split('::').last.to_sym
-
-      raise TagExistsError.new sym if method_defined? sym
-
-      self.define_method sym do |**attributes, &contents|
-        child subclass.new(**attributes, &contents)
-      end
-    end
-
     def contents(&contents)
       if block_given?
         @children.clear
@@ -26,7 +16,7 @@ module Htrb
     end
 
     def child(child)
-      unless child.is_a?(String) || child.is_a?(Htrb::HtmlNode)
+      unless child.is_a?(String) || child.is_a?(HtmlNode)
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
 
@@ -40,7 +30,7 @@ module Htrb
     end
 
     def t(text)
-      child text
+      child text.to_s
     end
 
     def to_s
@@ -64,7 +54,7 @@ module Htrb
     private
 
     def render(&contents)
-      instance_eval &contents if block_given? && !self_closing?
+      remit &contents if block_given? && !self_closing?
     end
 
     def method_missing(symbol, *args)
@@ -84,6 +74,16 @@ module Htrb
 
     def props
       @attributes
+    end
+
+    def remit(&contents)
+      if self_closing?
+        raise SelfClosingTagError.new
+      end
+
+      raise ArgumentError.new 'Must pass block' unless block_given?
+
+      instance_eval &contents
     end
 
     protected

@@ -1,4 +1,16 @@
 module Htrb
+  class Element < HtmlNode
+    def self.inherited(subclass)
+      sym = subclass.name.downcase.split('::').last.to_sym
+
+      raise TagExistsError.new sym if HtmlNode.method_defined? sym
+
+      HtmlNode.send :define_method, sym do |**attributes, &contents|
+        child subclass.new(**attributes, &contents)
+      end
+    end
+  end
+
   TAGS = [
     :a, :abbr, :address, :area, :article, :aside, :audio, :b, :bdi, :bdo,
     :blockquote, :body, :br, :button, :canvas, :caption, :cite, :code, :col,
@@ -23,7 +35,7 @@ module Htrb
 
     eval <<-CLASS_DEFINITION
       module Elements
-        class #{tag_name.capitalize} < Htrb::HtmlNode
+        class #{tag_name.capitalize} < Element
           def tag
             '#{tag_name}'
           end
