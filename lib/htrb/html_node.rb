@@ -6,10 +6,12 @@ module HTRB
       render &contents
     end
 
-    def contents(&contents)
+    attr_reader :parent
+
+    def contents(&new_contents)
       if block_given?
         @children.clear
-        render &contents
+        render &new_contents
       end
 
       @children.dup
@@ -25,6 +27,7 @@ module HTRB
       end
 
       @children.push child
+      child.parent = self if child.is_a? HtmlNode
 
       child
     end
@@ -88,6 +91,8 @@ module HTRB
     end
 
     protected
+
+    attr_writer :parent
 
     TAB = '  '
 
