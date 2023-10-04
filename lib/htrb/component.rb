@@ -8,6 +8,7 @@ module HTRB
       HtmlNode.send :define_method, sym do |**attributes, &contents|
         child subclass.new(**attributes, &contents)
       end
+      HtmlNode.send :private, sym
     end
 
     def self_closing?

@@ -8,6 +8,7 @@ module HTRB
       HtmlNode.send :define_method, sym do |**attributes, &contents|
         append_child subclass.new(**attributes, &contents)
       end
+      HtmlNode.send :private, sym
     end
   end
 
@@ -39,17 +40,17 @@ module HTRB
     class_name = tag_name.capitalize
 
     eval <<-CLASS_DEFINITION
-      class #{class_name} < Element
-        def tag
-          '#{tag_name}'
-        end
+      module Elements
+        class #{class_name} < Element
+          def tag
+            '#{tag_name}'
+          end
 
-        def self_closing?
-          #{self_closing}
+          def self_closing?
+            #{self_closing}
+          end
         end
       end
-
-      private_constant :#{class_name}
     CLASS_DEFINITION
   end
 end

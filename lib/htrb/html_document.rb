@@ -3,9 +3,9 @@ module HTRB
     def initialize
       @dom = HtmlNode.new
       @title = ''
-      @head = Head.new
-      @body = Body.new
-      html = Html.new
+      @head = Elements::Head.new
+      @body = Elements::Body.new
+      html = Elements::Html.new
 
       @dom.append_child '<!DOCTYPE html>'
       @dom.append_child html
