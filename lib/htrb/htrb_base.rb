@@ -4,7 +4,7 @@ module HTRB
   end
 
   def self.document
-    HtmlDocument.new
+    Document.new
   end
 
   def self.html(&content)

@@ -1,11 +1,11 @@
 module HTRB
-  class HtmlDocument
+  class Document
     def initialize
       @dom = HtmlNode.new
       @title = ''
-      @head = Elements::Head.new
-      @body = Elements::Body.new
-      html = Elements::Html.new
+      @head = Head.new
+      @body = Body.new
+      html = Html.new
 
       @dom.append_child '<!DOCTYPE html>'
       @dom.append_child html

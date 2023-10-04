@@ -96,6 +96,8 @@ module HTRB
 
     TAB = '  '
 
+    private_constant :TAB
+
     def to_pretty_arr(depth=0)
       depth -= 1 unless tag
 
@@ -113,6 +115,8 @@ module HTRB
       arr
     end
   end
+
+  private_constant :HtmlNode
 
   class TagExistsError < StandardError
     def initialize(symbol)

@@ -11,6 +11,8 @@ module HTRB
     end
   end
 
+  private_constant :Element
+
   TAGS = [
     :a, :abbr, :address, :area, :article, :aside, :audio, :b, :base, :bdi,
     :bdo, :blockquote, :body, :br, :button, :canvas, :caption, :cite, :code,
@@ -34,19 +36,20 @@ module HTRB
   TAGS.each do |tag|
     self_closing = SELF_CLOSING.include? tag
     tag_name = tag.to_s
+    class_name = tag_name.capitalize
 
     eval <<-CLASS_DEFINITION
-      module Elements
-        class #{tag_name.capitalize} < Element
-          def tag
-            '#{tag_name}'
-          end
+      class #{class_name} < Element
+        def tag
+          '#{tag_name}'
+        end
 
-          def self_closing?
-            #{self_closing}
-          end
+        def self_closing?
+          #{self_closing}
         end
       end
+
+      private_constant :#{class_name}
     CLASS_DEFINITION
   end
 end
