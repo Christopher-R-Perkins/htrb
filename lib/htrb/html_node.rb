@@ -70,11 +70,9 @@ module HTRB
 
       html += "<#{tag}#{attributes}>" if tag
 
-      unless self_closing?
-        @children.each { |child| html += child.to_s }
+      @children.each { |child| html += child.to_s }
 
-        html += "</#{tag}>" if tag
-      end
+      html += "</#{tag}>" if tag && !self_closing?
 
       html
     end
