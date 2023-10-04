@@ -28,6 +28,14 @@ module HTRB
       child
     end
 
+    def remove_child(child)
+      length = @children.length
+      @children = @children.select { |c| c != child }
+
+      return child if length > @children.length
+      nil
+    end
+
     def t(text)
       append_child text.to_s
     end
