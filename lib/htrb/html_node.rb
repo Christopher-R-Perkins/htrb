@@ -8,7 +8,7 @@ module HTRB
 
     attr_reader :parent
 
-    def contents(&new_contents)
+    def inner_html(&new_contents)
       if block_given?
         @children.clear
         render &new_contents

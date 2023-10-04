@@ -16,22 +16,19 @@ module HTRB
     end
 
     def head(&new_contents)
-      raise ArgumentError.new 'No block given' unless block_given?
-
       title_str = @title
-      @head.contents do
+
+      @head.inner_html do
         title do
           t title_str
         end
         meta charset: 'UTF-8'
         self.instance_eval &new_contents
       end
-
-      self
     end
 
     def body(&new_contents)
-      @body.contents &new_contents
+      @body.inner_html &new_contents
     end
 
     def to_s
