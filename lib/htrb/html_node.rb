@@ -22,10 +22,6 @@ module HTRB
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
 
-      if self_closing?
-        raise SelfClosingTagError.new
-      end
-
       @children.push child
       child.parent = self if child.is_a? HtmlNode
 
@@ -57,7 +53,7 @@ module HTRB
     private
 
     def render(&contents)
-      remit &contents if block_given? && !self_closing?
+      remit &contents if block_given?
     end
 
     def method_missing(symbol, *args)
