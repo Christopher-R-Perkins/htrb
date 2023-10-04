@@ -28,6 +28,26 @@ module HTRB
       child
     end
 
+    def insert_child(child, where, at)
+      unless child.is_a?(String) || child.is_a?(HtmlNode)
+        raise ArgumentError.new 'A child must be a string or HtmlNode'
+      end
+
+      index = @children.index at
+      raise ArgumentError.new 'at is not in children' unless index
+
+      case where
+      when :before
+        @children.insert index, child
+      when :after
+        @children.insert index + 1, child
+      else
+        raise ArgumentError.new 'Invalid where, must be :before or :after'
+      end
+
+      child
+    end
+
     def remove_child(child)
       length = @children.length
       @children = @children.select { |c| c != child }
