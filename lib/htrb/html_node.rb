@@ -1,4 +1,4 @@
-module Htrb
+module HTRB
   class HtmlNode
     def initialize(**attributes, &contents)
       @attributes = attributes
@@ -6,31 +6,63 @@ module Htrb
       render &contents
     end
 
-    def contents(&contents)
+    attr_reader :parent
+
+    def inner_html(&new_contents)
       if block_given?
         @children.clear
-        render &contents
+        render &new_contents
       end
 
       @children.dup
     end
 
-    def child(child)
+    def append(child)
       unless child.is_a?(String) || child.is_a?(HtmlNode)
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
 
-      if self_closing?
-        raise SelfClosingTagError.new
-      end
-
       @children.push child
+      child.parent = self if child.is_a? HtmlNode
 
       child
     end
 
+    def insert(child, where, at)
+      unless child.is_a?(String) || child.is_a?(HtmlNode)
+        raise ArgumentError.new 'A child must be a string or HtmlNode'
+      end
+
+      index = @children.index at
+      raise ArgumentError.new 'at is not in children' unless index
+
+      case where
+      when :before
+        @children.insert index, child
+      when :after
+        @children.insert index + 1, child
+      else
+        raise ArgumentError.new 'Invalid where, must be :before or :after'
+      end
+
+      child.parent = self if child.is_a? HtmlNode
+      child
+    end
+
+    def remove(child)
+      length = @children.length
+      @children = @children.select { |c| c != child }
+
+      if length > @children.length
+        child.parent = nil if child.is_a? HtmlNode
+        return child
+      end
+
+      nil
+    end
+
     def t(text)
-      child text.to_s
+      append text.to_s
     end
 
     def to_s
@@ -54,11 +86,11 @@ module Htrb
     private
 
     def render(&contents)
-      remit &contents if block_given? && !self_closing?
+      remit &contents if block_given?
     end
 
     def method_missing(symbol, *args)
-      return false if [:self_closing?, :tag].include? symbol
+      return nil if [:self_closing?, :tag].include? symbol
       super
     end
 
@@ -89,7 +121,11 @@ module Htrb
 
     protected
 
+    attr_writer :parent
+
     TAB = '  '
+
+    private_constant :TAB
 
     def to_pretty_arr(depth=0)
       depth -= 1 unless tag
@@ -108,6 +144,8 @@ module Htrb
       arr
     end
   end
+
+  private_constant :HtmlNode
 
   class TagExistsError < StandardError
     def initialize(symbol)

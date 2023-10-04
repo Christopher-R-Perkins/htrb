@@ -1,9 +1,15 @@
-module Htrb
-  def self.fragment(&block)
-    HtmlNode.new &block
+module HTRB
+  def self.fragment(&content)
+    HtmlNode.new &content
   end
 
   def self.document
-    HtmlDocument.new
+    Document.new
+  end
+
+  def self.html(&content)
+    throw ArgumentError.new "No block passed" unless block_given?
+
+    HtmlNode.new(&content).to_s
   end
 end
