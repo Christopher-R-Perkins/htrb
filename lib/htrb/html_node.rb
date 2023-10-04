@@ -17,7 +17,7 @@ module HTRB
       @children.dup
     end
 
-    def child(child)
+    def append_child(child)
       unless child.is_a?(String) || child.is_a?(HtmlNode)
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
@@ -33,7 +33,7 @@ module HTRB
     end
 
     def t(text)
-      child text.to_s
+      append_child text.to_s
     end
 
     def to_s

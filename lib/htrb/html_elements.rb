@@ -6,7 +6,7 @@ module HTRB
       raise TagExistsError.new sym if HtmlNode.method_defined? sym
 
       HtmlNode.send :define_method, sym do |**attributes, &contents|
-        child subclass.new(**attributes, &contents)
+        append_child subclass.new(**attributes, &contents)
       end
     end
   end

@@ -7,10 +7,10 @@ module HTRB
       @body = Elements::Body.new
       html = Elements::Html.new
 
-      @dom.child '<!DOCTYPE html>'
-      @dom.child html
-      html.child @head
-      html.child @body
+      @dom.append_child '<!DOCTYPE html>'
+      @dom.append_child html
+      html.append_child @head
+      html.append_child @body
 
       head do end
     end
