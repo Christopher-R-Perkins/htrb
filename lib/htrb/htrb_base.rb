@@ -1,4 +1,4 @@
-module Htrb
+module HTRB
   def self.fragment(&block)
     HtmlNode.new &block
   end

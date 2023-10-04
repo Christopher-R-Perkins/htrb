@@ -1,4 +1,4 @@
-module Htrb
+module HTRB
   class Element < HtmlNode
     def self.inherited(subclass)
       sym = subclass.name.downcase.split('::').last.to_sym

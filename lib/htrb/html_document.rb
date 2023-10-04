@@ -1,4 +1,4 @@
-module Htrb
+module HTRB
   class HtmlDocument
     def initialize
       @dom = HtmlNode.new

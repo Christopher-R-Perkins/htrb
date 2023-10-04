@@ -1,4 +1,4 @@
-module Htrb
+module HTRB
   class HtmlNode
     def initialize(**attributes, &contents)
       @attributes = attributes
