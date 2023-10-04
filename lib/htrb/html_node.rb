@@ -17,7 +17,7 @@ module HTRB
       @children.dup
     end
 
-    def append_child(child)
+    def append(child)
       unless child.is_a?(String) || child.is_a?(HtmlNode)
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
@@ -28,7 +28,7 @@ module HTRB
       child
     end
 
-    def insert_child(child, where, at)
+    def insert(child, where, at)
       unless child.is_a?(String) || child.is_a?(HtmlNode)
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
@@ -45,19 +45,24 @@ module HTRB
         raise ArgumentError.new 'Invalid where, must be :before or :after'
       end
 
+      child.parent = self if child.is_a? HtmlNode
       child
     end
 
-    def remove_child(child)
+    def remove(child)
       length = @children.length
       @children = @children.select { |c| c != child }
 
-      return child if length > @children.length
+      if length > @children.length
+        child.parent = nil if child.is_a? HtmlNode
+        return child
+      end
+
       nil
     end
 
     def t(text)
-      append_child text.to_s
+      append text.to_s
     end
 
     def to_s
