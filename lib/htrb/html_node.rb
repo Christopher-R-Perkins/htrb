@@ -66,7 +66,8 @@ module Htrb
       attr_str = ''
 
       @attributes.each do |key, value|
-        attr_str += " #{key}=\"#{value}\""
+        new_key = key.to_s.downcase.gsub /_/, '-'
+        attr_str += " #{new_key}=\"#{value}\""
       end
 
       attr_str
@@ -110,7 +111,7 @@ module Htrb
 
   class TagExistsError < StandardError
     def initialize(symbol)
-      super "htrb component `#{symbol}` already exists"
+      super "Can't add component, the method `#{symbol}` already exists"
     end
   end
 
