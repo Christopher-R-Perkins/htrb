@@ -9,5 +9,9 @@ module HTRB
         child subclass.new(**attributes, &contents)
       end
     end
+
+    def self_closing?
+      true
+    end
   end
 end
