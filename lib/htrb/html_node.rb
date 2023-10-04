@@ -57,7 +57,7 @@ module HTRB
     end
 
     def method_missing(symbol, *args)
-      return false if [:self_closing?, :tag].include? symbol
+      return nil if [:self_closing?, :tag].include? symbol
       super
     end
 
