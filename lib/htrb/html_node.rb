@@ -22,6 +22,9 @@ module HTRB
         raise ArgumentError.new 'A child must be a string or HtmlNode'
       end
 
+      raise TagParadoxError.new if has_ancestor? child
+      raise SelfClosingTagError.new if self_closing? && self.is_a?(Element)
+
       @children.push child
       child.parent = self if child.is_a? HtmlNode
 
@@ -35,6 +38,7 @@ module HTRB
 
       index = @children.index at
       raise ArgumentError.new 'at is not in children' unless index
+      raise TagParadoxError.new if has_ancestor? child
 
       case where
       when :before
@@ -59,10 +63,6 @@ module HTRB
       end
 
       nil
-    end
-
-    def t(text)
-      append text.to_s
     end
 
     def to_s
@@ -117,6 +117,20 @@ module HTRB
       instance_eval &contents
     end
 
+    def t(text)
+      append text.to_s
+    end
+
+    def has_ancestor?(node)
+      element = self
+      until element == nil
+        return true if element == node
+        element = element.parent
+      end
+
+      false
+    end
+
     protected
 
     attr_writer :parent
@@ -138,7 +152,7 @@ module HTRB
         end
       end
 
-      arr.push "#{TAB * depth}</#{tag}>" if tag
+      arr.push "#{TAB * depth}</#{tag}>" if tag && !self_closing?
       arr
     end
   end
@@ -154,6 +168,12 @@ module HTRB
   class SelfClosingTagError < StandardError
     def initialize
       super "Can't add children to self closing tag"
+    end
+  end
+
+  class TagParadoxError < StandardError
+    def initialize
+      super "Can't add a child as a descendant of itself"
     end
   end
 end

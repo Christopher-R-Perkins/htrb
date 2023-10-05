@@ -2,7 +2,7 @@ require_relative "lib/htrb/version"
 
 Gem::Specification.new do |s|
   s.name = 'htrb'
-  s.version = Htrb::VERSION
+  s.version = HTRB::VERSION
   s.authors = ['Christopher Perkins']
   s.email = ['Christopher.Perkins@null.net']
 
@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
     'lib/htrb/htrb_base.rb',
     'lib/htrb/html_document.rb',
     'lib/htrb/component.rb',
+    'test/htrb_test.rb',
     'LISCENSE',
     'README.md',
     'Gemfile',

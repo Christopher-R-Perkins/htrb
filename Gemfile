@@ -4,5 +4,6 @@ gemspec
 
 group :development do
   gem "minitest"
-  gem "rubocop"
+  gem "minitest-reporters"
+  gem "simplecov"
 end

@@ -3,8 +3,6 @@ module HTRB
     def self.inherited(subclass)
       sym = subclass.name.downcase.split('::').last.to_sym
 
-      raise TagExistsError.new sym if HtmlNode.method_defined? sym
-
       HtmlNode.send :define_method, sym do |**attributes, &contents|
         append subclass.new(**attributes, &contents)
       end

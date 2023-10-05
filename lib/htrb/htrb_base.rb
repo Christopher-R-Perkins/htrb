@@ -3,8 +3,8 @@ module HTRB
     HtmlNode.new &content
   end
 
-  def self.document
-    Document.new
+  def self.document(**options, &body_content)
+    Document.new **options, &body_content
   end
 
   def self.html(&content)
