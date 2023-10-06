@@ -19,10 +19,10 @@ module HTRB
       title_str = @title
 
       @head.inner_html do
-        title do
-          t title_str
+        title! do
+          append title_str
         end
-        meta charset: 'UTF-8'
+        meta! charset: 'UTF-8'
         remit &new_contents if block_given?
       end
     end

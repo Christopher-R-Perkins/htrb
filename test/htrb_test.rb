@@ -13,7 +13,7 @@ class HtrbTest < Minitest::Test
 
     tag = nil
     @container_frag = HTRB.fragment do
-      tag = div id: 'container'
+      tag = div! id: 'container'
     end
 
     @div = tag
@@ -21,6 +21,7 @@ class HtrbTest < Minitest::Test
 
   def test_html5_tags_are_methods
     HTRB::TAGS.each do |tag|
+      tag = (tag.to_s + '!').to_sym
       assert_equal true, @empty_frag.respond_to?(tag, true)
     end
   end
@@ -128,8 +129,13 @@ class HtrbTest < Minitest::Test
   end
 
   def test_fragment_t
-    em = HTRB::Elements::Em.new { t 'Testing text' }
+    em = HTRB::Elements::Em.new { t! 'Testing text' }
     assert_equal '<em>Testing text</em>', em.to_s
+  end
+
+  def test_fagment_t_escape
+    strong = HTRB::Elements::Strong.new { t! 'Testing > you & < me' }
+    assert_equal '<strong>Testing &gt; you &amp; &lt; me</strong>', strong.to_s
   end
 
   def test_fragment_missing_method_error
@@ -138,7 +144,7 @@ class HtrbTest < Minitest::Test
 
   def test_fragment_props
     button = HTRB::Elements::Button.new text: 'Button Text' do
-      t props[:text]
+      t! props[:text]
     end
     assert_equal '<button text="Button Text">Button Text</button>', button.to_s
   end
@@ -147,16 +153,21 @@ class HtrbTest < Minitest::Test
     eval <<-CLASS_DEFINITION
       class Tester < HTRB::Component
         def render(**attributes, &block)
-          t 'Test'
+          t! 'Test'
+          remit &block if block_given?
         end
       end
     CLASS_DEFINITION
 
-    assert_equal true, @empty_frag.respond_to?(:_tester, true)
+    assert_equal true, @empty_frag.respond_to?(:_tester!, true)
     assert_equal true, Tester.new.self_closing?
 
-    @empty_frag.inner_html { _tester }
+    @empty_frag.inner_html { _tester! }
     assert_equal 'Test', @empty_frag.to_s
+
+    assert_raises HTRB::SelfClosingTagError do
+      Tester.new.inner_html {}
+    end
   end
 
   def test_component_duplicate_error
@@ -175,8 +186,8 @@ class HtrbTest < Minitest::Test
 
   def test_html
     return_value = HTRB.html do
-      div id: 'container' do
-        img src: 'lol.jpg'
+      div! id: 'container' do
+        img! src: 'lol.jpg'
       end
     end
 
@@ -216,7 +227,7 @@ class HtrbTest < Minitest::Test
   end
 
   def test_document_pass_head
-    head_proc = proc { link rel: 'stylesheet', href: 'mystyle.css' }
+    head_proc = proc { link! rel: 'stylesheet', href: 'mystyle.css' }
     doc = HTRB.document head: head_proc
 
     assert_equal '<!DOCTYPE html><html><head><title></title><meta charset="UTF-8"><link rel="stylesheet" href="mystyle.css"></head><body></body></html>', doc.to_s
@@ -224,19 +235,19 @@ class HtrbTest < Minitest::Test
 
   def test_document_change_head
     doc = HTRB.document
-    doc.head { link rel: 'stylesheet', href: 'mystyle.css' }
+    doc.head { link! rel: 'stylesheet', href: 'mystyle.css' }
 
     assert_equal '<!DOCTYPE html><html><head><title></title><meta charset="UTF-8"><link rel="stylesheet" href="mystyle.css"></head><body></body></html>', doc.to_s
   end
 
   def test_document_pass_body
-    doc = HTRB.document { t 'This is my body' }
+    doc = HTRB.document { t! 'This is my body' }
     assert_equal '<!DOCTYPE html><html><head><title></title><meta charset="UTF-8"></head><body>This is my body</body></html>', doc.to_s
   end
 
   def test_document_change_body
     doc = HTRB.document
-    doc.body { t 'This is my body' }
+    doc.body { t! 'This is my body' }
     assert_equal '<!DOCTYPE html><html><head><title></title><meta charset="UTF-8"></head><body>This is my body</body></html>', doc.to_s
   end
 end

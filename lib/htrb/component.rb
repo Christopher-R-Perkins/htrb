@@ -1,7 +1,7 @@
 module HTRB
   class Component < HtmlNode
     def self.inherited(subclass)
-      sym = ('_' + subclass.name.downcase.split('::').last).to_sym
+      sym = ('_' + subclass.name.downcase.split('::').last + '!').to_sym
 
       raise TagExistsError.new sym if HtmlNode.private_method_defined? sym
 

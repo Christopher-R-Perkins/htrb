@@ -1,6 +1,9 @@
+require 'cgi'
+
 module HTRB
   class HtmlNode
     def initialize(**attributes, &contents)
+      raise SelfClosingTagError if self_closing? && block_given?
       @attributes = attributes
       @children = []
       render &contents
@@ -10,6 +13,7 @@ module HTRB
 
     def inner_html(&new_contents)
       if block_given?
+        @children.each { |child| child.parent = nil if child.is_a? HtmlNode }
         @children.clear
         render &new_contents
       end
@@ -25,8 +29,8 @@ module HTRB
       raise TagParadoxError.new if has_ancestor? child
       raise SelfClosingTagError.new if self_closing? && self.is_a?(Element)
 
-      @children.push child
       child.parent = self if child.is_a? HtmlNode
+      @children.push child
 
       child
     end
@@ -42,14 +46,15 @@ module HTRB
 
       case where
       when :before
+        child.parent = self if child.is_a? HtmlNode
         @children.insert index, child
       when :after
+        child.parent = self if child.is_a? HtmlNode
         @children.insert index + 1, child
       else
         raise ArgumentError.new 'Invalid where, must be :before or :after'
       end
 
-      child.parent = self if child.is_a? HtmlNode
       child
     end
 
@@ -108,17 +113,15 @@ module HTRB
     end
 
     def remit(&contents)
-      if self_closing?
-        raise SelfClosingTagError.new
-      end
+      raise SelfClosingTagError.new if self_closing?
 
       raise ArgumentError.new 'Must pass block' unless block_given?
 
-      instance_eval &contents
+      instance_exec &contents
     end
 
-    def t(text)
-      append text.to_s
+    def t!(text)
+      append CGI.escape_html(text.to_s)
     end
 
     def has_ancestor?(node)
@@ -133,7 +136,10 @@ module HTRB
 
     protected
 
-    attr_writer :parent
+    def parent=(value)
+      @parent.remove(self) if @parent
+      @parent = value
+    end
 
     TAB = '  '
 

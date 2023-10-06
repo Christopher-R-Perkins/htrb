@@ -5,8 +5,9 @@ Gem::Specification.new do |s|
   s.version = HTRB::VERSION
   s.authors = ['Christopher Perkins']
   s.email = ['Christopher.Perkins@null.net']
+  s.homepage = 'https://github.com/QuasariNova/htrb'
 
-  s.summary = 'htrb is a dsl for html and webcomponents'
+  s.summary = 'HTRB is a dsl for html and webcomponents'
   s.licenses = ['MIT']
 
   s.files = [
@@ -18,7 +19,6 @@ Gem::Specification.new do |s|
     'lib/htrb/html_document.rb',
     'lib/htrb/component.rb',
     'test/htrb_test.rb',
-    'LISCENSE',
     'README.md',
     'Gemfile',
   ]
