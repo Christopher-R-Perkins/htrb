@@ -77,7 +77,7 @@ a! href: '/join' do
 end
 ```
 
-Oh, did I just use `t!`, `<t>` isn't a tag. No, but `t!` is a special method created to make a text node. Its use is just `t! string` and it will make the string a child of the parent element. Do note, `t!` automatically escapes HTML, so if you don't want that use `append` instead(see [HTRB::HtmlNode](#htrb::htmlnode) reference)
+Oh, did I just use `t!`, `<t>` isn't a tag. No, but `t!` is a special method created to make a text node. Its use is just `t! string` and it will make the string a child of the parent element. Do note, `t!` automatically escapes HTML, so if you don't want that use `append` instead(see [HTRB::HtmlNode](#htrbhtmlnode) reference)
 
 #### Warning
 
@@ -120,11 +120,11 @@ end
 
 The `fragment` method is very similar to `HTRB#html`. In fact, the `html` does the same thing, except it calls `to_s` on the resulting object and returns the string.
 
-`HTRB#fragment` creates an `HtmlNode` and populates its children with the block you pass to it. You are returned the resulting `HtmlNode` object and are free to do with it as you please. See [HTRB::HtmlNode](#htrb::htmlnode) reference.
+`HTRB#fragment` creates an `HtmlNode` and populates its children with the block you pass to it. You are returned the resulting `HtmlNode` object and are free to do with it as you please. See [HTRB::HtmlNode](#htrbhtmlnode) reference.
 
 ### HTRB#document
 
-The `document` method is a shortcut to create an `HTRB::Document` object. As such it takes all the arguments to construct that a `HTRB::Document` takes and returns the document object. See [HTRB::Document](#htrb::document) reference.
+The `document` method is a shortcut to create an `HTRB::Document` object. As such it takes all the arguments to construct that a `HTRB::Document` takes and returns the document object. See [HTRB::Document](#htrbdocument) reference.
 
 ---
 
