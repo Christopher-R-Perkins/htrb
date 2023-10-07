@@ -162,7 +162,7 @@ By default, custom components are considered self-closing tags. This means, if y
 class CustomContainer < HTRB::Component
   def render(&contents)
     div class: 'modal' do
-      remit &contents
+      remit &contents if block_given?
     end
   end
 
