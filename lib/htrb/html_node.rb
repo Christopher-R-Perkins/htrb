@@ -101,8 +101,17 @@ module HTRB
       attr_str = ''
 
       @attributes.each do |key, value|
+        value = value.to_s
         new_key = key.to_s.downcase.gsub /_/, '-'
-        attr_str += " #{new_key}=\"#{value}\""
+
+        if value.match /"/
+          quotes = "'"
+          value.gsub! /'/, "&#39;"
+        else
+          quotes = '"'
+        end
+
+        attr_str += " #{new_key}=#{quotes}#{value}#{quotes}"
       end
 
       attr_str

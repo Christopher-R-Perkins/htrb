@@ -47,6 +47,44 @@ class HtrbTest < Minitest::Test
     assert_equal "<div id=\"container\">\n  Hello\n</div>", @container_frag.to_pretty
   end
 
+  def test_attribute_quote_to_s
+    out = HTRB.html do
+      div! attribute: '{"JSON": "Object"}'
+    end
+
+    assert_equal '<div attribute=\'{"JSON": "Object"}\'></div>', out
+  end
+
+  def test_attribute_quote_to_pretty
+    out = HTRB.fragment do
+      div! attribute: '{"JSON": "Object"}'
+    end.to_pretty
+
+    assert_equal "<div attribute='{\"JSON\": \"Object\"}'>\n</div>", out
+  end
+
+  def test_attribute_quote_escape_to_s
+    out = HTRB.html do
+      div! message: "I'd like to say \"hello\" to everyone."
+    end
+
+    expected =
+      '<div message=\'I&#39;d like to say "hello" to everyone.\'></div>'
+
+    assert_equal expected, out
+  end
+
+  def test_attribute_quote_escape_to_pretty
+    out = HTRB.fragment do
+      div! message: "I'd like to say \"hello\" to everyone."
+    end.to_pretty
+
+    expected =
+      "<div message='I&#39;d like to say \"hello\" to everyone.'>\n</div>"
+
+    assert_equal expected, out
+  end
+
   def test_inner_html
     assert_equal [@div], @container_frag.inner_html
   end
