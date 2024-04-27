@@ -41,6 +41,8 @@
 
 It has been designed with technologies like [htmx](https://htmx.org/), [Alpine.js](https://alpinejs.dev/), and [Tailwind CSS](https://tailwindcss.com/) in mind to allow easy rendering of HTML fragments on the backend.
 
+To see a sample app using HTRB, [checkout this project](https://github.com/Christopher-R-Perkins/blink-out-htmx)
+
 ## Use
 ### Installation
 **HTRB** require Ruby 3.0.0 or higher.
